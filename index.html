@@ -224,6 +224,43 @@ pointer-events:none}
 .social-links a{width:36px;height:36px;border-radius:50%;border:1px solid var(--gray-dark);display:flex;align-items:center;justify-content:center;transition:var(--transition);font-size:.85rem}
 .social-links a:hover{border-color:var(--gold);color:var(--gold);background:rgba(232,150,63,.05)}
 
+/* ===== PRODUCT MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:3000;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);z-index:3001;background:var(--black-soft);border:1px solid rgba(232,150,63,.1);border-radius:var(--radius-lg);width:min(720px,94vw);max-height:90vh;overflow-y:auto;opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.modal.open{opacity:1;pointer-events:all;transform:translate(-50%,-50%) scale(1)}
+.modal::-webkit-scrollbar{width:4px}
+.modal::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+.modal-close{position:absolute;top:1rem;right:1rem;z-index:10;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);color:var(--white);font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:var(--transition);border:1px solid rgba(255,255,255,.1)}
+.modal-close:hover{background:var(--danger);border-color:var(--danger)}
+.modal-img{width:100%;height:300px;overflow:hidden;flex-shrink:0;position:relative}
+.modal-img img{width:100%;height:100%;object-fit:cover}
+.modal-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(transparent,var(--black-soft))}
+.modal-body{padding:1.8rem 2rem 2rem}
+.modal-cat{font-size:.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:600;margin-bottom:.3rem}
+.modal-title{font-family:var(--font-display);font-size:2rem;font-weight:700;margin-bottom:.5rem;line-height:1.2}
+.modal-desc{color:var(--gray-light);font-size:.95rem;line-height:1.6;margin-bottom:1.5rem}
+.modal-meta{display:flex;gap:1rem;margin-bottom:1.8rem;flex-wrap:wrap}
+.meta-item{flex:1;min-width:120px;display:flex;align-items:center;gap:.7rem;background:var(--black-card);border:1px solid rgba(255,255,255,.04);border-radius:var(--radius);padding:.9rem 1rem}
+.meta-item .meta-icon{font-size:1.4rem}
+.meta-item small{display:block;font-size:.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:.1rem}
+.meta-item strong{font-size:.9rem;color:var(--white)}
+.modal-section{margin-bottom:1.5rem}
+.modal-section h4{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:.6rem}
+.modal-section p{font-size:.85rem;color:var(--gray-light);line-height:1.7}
+.modal-actions{display:flex;gap:1rem;align-items:center;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.04)}
+.modal-add-btn{flex:1;padding:1rem;font-size:1rem;justify-content:center}
+.modal-qty-wrap{display:flex;align-items:center;gap:.5rem}
+.modal-qty-wrap .qty-btn{width:38px;height:38px;font-size:1.1rem}
+.modal-qty-wrap .qty-num{font-size:1.1rem;min-width:28px;text-align:center}
+@media(max-width:768px){
+.modal-img{height:220px}
+.modal-body{padding:1.2rem 1.3rem 1.5rem}
+.modal-title{font-size:1.5rem}
+.modal-meta{gap:.6rem}
+.meta-item{padding:.7rem .8rem}
+}
+
 /* ===== TOAST ===== */
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--success);color:var(--white-pure);padding:.9rem 1.4rem;border-radius:var(--radius);font-weight:600;font-size:.85rem;z-index:3000;transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;gap:.5rem;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .toast.show{transform:translateY(0);opacity:1}
@@ -487,31 +524,138 @@ pointer-events:none}
 </div>
 </div>
 
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+<div class="modal" id="productModal">
+<button class="modal-close" onclick="closeModal()">✕</button>
+<div class="modal-img" id="modalImg"></div>
+<div class="modal-body">
+<div class="modal-cat" id="modalCat"></div>
+<h2 class="modal-title" id="modalTitle"></h2>
+<p class="modal-desc" id="modalDesc"></p>
+<div class="modal-meta">
+<div class="meta-item"><span class="meta-icon">⚖️</span><div><small>Serving</small><strong id="modalServing"></strong></div></div>
+<div class="meta-item"><span class="meta-icon">🔥</span><div><small>Calories</small><strong id="modalCalories"></strong></div></div>
+<div class="meta-item"><span class="meta-icon">💰</span><div><small>Price</small><strong id="modalPrice"></strong></div></div>
+</div>
+<div class="modal-section">
+<h4>📋 Ingredients</h4>
+<p id="modalIngredients"></p>
+</div>
+<div class="modal-section">
+<h4>👨‍🍳 Preparation Instructions</h4>
+<p id="modalPrep"></p>
+</div>
+<div class="modal-actions">
+<button class="btn btn-primary modal-add-btn" id="modalAddBtn">Add to Cart</button>
+</div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 <a href="https://wa.me/5111982053854" target="_blank" class="wa-float">💬</a>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const products=[
-{id:1,name:"Beef Lasagna",desc:"Fresh pasta, bolognese sauce & creamy béchamel",price:45,img:"https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=600&q=80",category:"pasta",badge:"popular"},
-{id:2,name:"Chicken Stroganoff",desc:"Creamy sauce with rice and crispy potato sticks",price:35,img:"https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=600&q=80",category:"mains",badge:"popular"},
-{id:3,name:"Grilled Salmon",desc:"With passion fruit glaze, purée & seasonal veggies",price:58,img:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80",category:"mains",badge:"new"},
-{id:4,name:"Fitness Chicken Bowl",desc:"Grilled chicken, brown rice & steamed vegetables",price:32,img:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80",category:"fitness",badge:"new"},
-{id:5,name:"Chicken Pie",desc:"Flaky crust with creamy chicken & herb filling",price:42,img:"https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80",category:"pies"},
-{id:6,name:"Four Cheese Lasagna",desc:"Mozzarella, gorgonzola, provolone & parmesan",price:48,img:"https://images.unsplash.com/photo-1619895092538-128341789043?w=600&q=80",category:"pasta"},
-{id:7,name:"Ricotta Cannelloni",desc:"Spinach & ricotta with tomato sugo, gratinéed",price:40,img:"https://images.unsplash.com/photo-1587740908075-9e245070dfaa?w=600&q=80",category:"pasta"},
-{id:8,name:"Gourmet Brownie",desc:"Belgian chocolate with walnuts — heavenly rich",price:28,img:"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80",category:"desserts"},
-{id:9,name:"Brazilian Feijoada",desc:"Black bean stew with rice, collard greens & farofa",price:48,img:"https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=600&q=80",category:"mains",badge:"popular"},
-{id:10,name:"Leek Quiche",desc:"Buttery pastry with cream cheese & leek filling",price:35,img:"https://images.unsplash.com/photo-1635321593217-40050ad13c74?w=600&q=80",category:"pies"},
-{id:11,name:"Low-Carb Bowl",desc:"Chicken, avocado, egg & fresh mixed greens",price:34,img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80",category:"fitness"},
-{id:12,name:"Chocolate Fondant",desc:"Molten centre, served with vanilla ice cream",price:30,img:"https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&q=80",category:"desserts",badge:"popular"},
-{id:13,name:"Pesto Gnocchi",desc:"Potato gnocchi with house-made genovese pesto",price:38,img:"https://images.unsplash.com/photo-1621510456681-2330135e5871?w=600&q=80",category:"pasta"},
-{id:14,name:"Angus Picanha Steak",desc:"Sliced with chimichurri & rustic potato wedges",price:65,img:"https://images.unsplash.com/photo-1558030006-450675393462?w=600&q=80",category:"meats",badge:"new"},
-{id:15,name:"Palm Heart Empada",desc:"Homemade pastry with creamy palm heart filling",price:40,img:"https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&q=80",category:"pies"},
-{id:16,name:"Carrot Cake",desc:"Moist cake with gourmet brigadeiro frosting",price:32,img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80",category:"desserts"},
-{id:17,name:"Protein Wrap",desc:"Turkey breast, cottage cheese, rocket & quinoa",price:28,img:"https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&q=80",category:"fitness"},
-{id:18,name:"BBQ Pulled Beef Ribs",desc:"Slow-cooked with smoky barbecue glaze",price:55,img:"https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80",category:"meats"},
-{id:19,name:"Mushroom Risotto",desc:"Arborio rice, wild mushrooms & truffle oil",price:44,img:"https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&q=80",category:"mains"},
-{id:20,name:"Crème Caramel",desc:"Classic custard with silky caramel — grandma's recipe",price:25,img:"https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80",category:"desserts"}
+{id:1,name:"Beef Lasagna",desc:"Fresh pasta, bolognese sauce & creamy béchamel",price:45,img:"https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=600&q=80",category:"pasta",badge:"popular",
+ingredients:"Fresh pasta sheets, ground beef, tomato passata, onion, garlic, carrots, celery, butter, flour, whole milk, parmesan, mozzarella, nutmeg, olive oil, salt, pepper, bay leaves",
+serving:"400g (1 portion)",calories:520,
+prep:"Microwave: Remove lid, heat 5–6 min at medium power. Oven: Preheat to 180°C, bake for 18–20 min until golden and bubbling."},
+
+{id:2,name:"Chicken Stroganoff",desc:"Creamy sauce with rice and crispy potato sticks",price:35,img:"https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=600&q=80",category:"mains",badge:"popular",
+ingredients:"Chicken breast, heavy cream, tomato paste, onion, garlic, mushrooms, mustard, white rice, potato sticks, olive oil, salt, pepper, parsley",
+serving:"380g (1 portion)",calories:480,
+prep:"Microwave: Heat 4–5 min, stir halfway. Oven: Transfer to dish, cover with foil, bake at 180°C for 15 min. Top with potato sticks after heating."},
+
+{id:3,name:"Grilled Salmon",desc:"With passion fruit glaze, purée & seasonal veggies",price:58,img:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80",category:"mains",badge:"new",
+ingredients:"Atlantic salmon fillet, passion fruit pulp, honey, butter, potatoes, cream, broccoli, carrots, zucchini, lemon, garlic, olive oil, salt, pepper",
+serving:"350g (1 portion)",calories:440,
+prep:"Oven recommended: Preheat to 190°C. Place salmon and veggies in oven-safe dish, bake 16–18 min. Microwave: Heat 4 min at medium power."},
+
+{id:4,name:"Fitness Chicken Bowl",desc:"Grilled chicken, brown rice & steamed vegetables",price:32,img:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80",category:"fitness",badge:"new",
+ingredients:"Grilled chicken breast, brown rice, sweet potato, broccoli, cherry tomatoes, edamame, sesame seeds, soy sauce, ginger, garlic, olive oil",
+serving:"350g (1 portion)",calories:380,
+prep:"Microwave: Remove lid, heat 4–5 min. Can be enjoyed cold as a salad bowl — just let it thaw in the fridge for 6 hours."},
+
+{id:5,name:"Chicken Pie",desc:"Flaky crust with creamy chicken & herb filling",price:42,img:"https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80",category:"pies",
+ingredients:"Wheat flour, butter, chicken breast, cream cheese, corn, peas, carrots, onion, garlic, parsley, chicken broth, egg, salt, pepper, nutmeg",
+serving:"320g (1 pie)",calories:460,
+prep:"Oven recommended: Preheat to 200°C, bake 20–25 min until crust is golden. Microwave: Heat 4 min (crust will be softer)."},
+
+{id:6,name:"Four Cheese Lasagna",desc:"Mozzarella, gorgonzola, provolone & parmesan",price:48,img:"https://images.unsplash.com/photo-1619895092538-128341789043?w=600&q=80",category:"pasta",
+ingredients:"Fresh pasta sheets, mozzarella, gorgonzola, provolone, parmesan, béchamel (butter, flour, milk, nutmeg), cream, garlic, salt, pepper",
+serving:"400g (1 portion)",calories:560,
+prep:"Microwave: Heat 5–6 min at medium power. Oven: Bake at 180°C for 18–20 min until cheese is melted and golden."},
+
+{id:7,name:"Ricotta Cannelloni",desc:"Spinach & ricotta with tomato sugo, gratinéed",price:40,img:"https://images.unsplash.com/photo-1587740908075-9e245070dfaa?w=600&q=80",category:"pasta",
+ingredients:"Fresh pasta tubes, ricotta cheese, spinach, tomato sugo (San Marzano tomatoes, basil, garlic, olive oil), mozzarella, parmesan, nutmeg, salt, pepper",
+serving:"380g (1 portion)",calories:470,
+prep:"Oven recommended: Preheat to 180°C, bake 18–20 min until bubbling. Microwave: Heat 5 min, stirring is not needed."},
+
+{id:8,name:"Gourmet Brownie",desc:"Belgian chocolate with walnuts — heavenly rich",price:28,img:"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80",category:"desserts",
+ingredients:"Belgian dark chocolate (70%), butter, eggs, sugar, wheat flour, walnuts, vanilla extract, cocoa powder, sea salt",
+serving:"120g (2 pieces)",calories:340,
+prep:"Thaw at room temperature for 30 min or microwave 20 sec. Best served slightly warm with a scoop of ice cream."},
+
+{id:9,name:"Brazilian Feijoada",desc:"Black bean stew with rice, collard greens & farofa",price:48,img:"https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=600&q=80",category:"mains",badge:"popular",
+ingredients:"Black beans, pork ribs, chorizo, dried beef, bay leaves, garlic, onion, white rice, collard greens, cassava flour (farofa), butter, orange, salt, pepper",
+serving:"450g (1 portion)",calories:580,
+prep:"Microwave: Heat 6–7 min, stir beans halfway. Oven: Transfer to pot, cover, heat at 180°C for 20 min. Serve with orange slices."},
+
+{id:10,name:"Leek Quiche",desc:"Buttery pastry with cream cheese & leek filling",price:35,img:"https://images.unsplash.com/photo-1635321593217-40050ad13c74?w=600&q=80",category:"pies",
+ingredients:"Wheat flour, butter, leeks, cream cheese, eggs, heavy cream, gruyère cheese, nutmeg, salt, pepper, thyme",
+serving:"280g (1 slice)",calories:390,
+prep:"Oven recommended: Preheat to 190°C, bake 15–18 min until golden. Microwave: Heat 3 min (pastry will be softer). Great served with side salad."},
+
+{id:11,name:"Low-Carb Bowl",desc:"Chicken, avocado, egg & fresh mixed greens",price:34,img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80",category:"fitness",
+ingredients:"Grilled chicken breast, avocado, boiled egg, mixed greens (rocket, spinach, lettuce), cherry tomatoes, cucumber, pumpkin seeds, lemon vinaigrette, olive oil, salt",
+serving:"330g (1 portion)",calories:320,
+prep:"Thaw in fridge for 6–8 hours and enjoy cold. Microwave: Heat chicken separately 2 min, then assemble with cold greens."},
+
+{id:12,name:"Chocolate Fondant",desc:"Molten centre, served with vanilla ice cream",price:30,img:"https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&q=80",category:"desserts",badge:"popular",
+ingredients:"Dark chocolate, butter, eggs, sugar, wheat flour, vanilla extract, cocoa powder, sea salt",
+serving:"140g (1 fondant)",calories:380,
+prep:"Oven: Preheat to 200°C, bake from frozen for 12–14 min. Centre should be molten. Microwave: Heat 60–90 sec. Serve immediately with ice cream."},
+
+{id:13,name:"Pesto Gnocchi",desc:"Potato gnocchi with house-made genovese pesto",price:38,img:"https://images.unsplash.com/photo-1621510456681-2330135e5871?w=600&q=80",category:"pasta",
+ingredients:"Potatoes, wheat flour, eggs, fresh basil, pine nuts, parmesan, garlic, extra virgin olive oil, salt, pepper",
+serving:"360g (1 portion)",calories:420,
+prep:"Microwave: Heat 4–5 min, stir halfway. Pan: Sauté in a hot pan with olive oil for 4 min for crispier gnocchi. Add fresh basil on top."},
+
+{id:14,name:"Angus Picanha Steak",desc:"Sliced with chimichurri & rustic potato wedges",price:65,img:"https://images.unsplash.com/photo-1558030006-450675393462?w=600&q=80",category:"meats",badge:"new",
+ingredients:"Angus picanha (rump cap), potatoes, chimichurri (parsley, oregano, garlic, red wine vinegar, olive oil, chilli flakes), coarse salt, black pepper, rosemary",
+serving:"400g (1 portion)",calories:550,
+prep:"Oven recommended: Preheat to 200°C, bake 18–22 min. Pan: Sear steak slices in hot pan 2 min each side, heat potatoes in oven. Drizzle chimichurri before serving."},
+
+{id:15,name:"Palm Heart Empada",desc:"Homemade pastry with creamy palm heart filling",price:40,img:"https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&q=80",category:"pies",
+ingredients:"Wheat flour, butter, palm hearts, cream cheese, onion, garlic, parsley, chicken broth, egg, olive oil, salt, pepper",
+serving:"300g (6 mini empadas)",calories:410,
+prep:"Oven recommended: Preheat to 200°C, bake 15–18 min until golden. Microwave: Heat 3 min. Best served warm as an appetiser or snack."},
+
+{id:16,name:"Carrot Cake",desc:"Moist cake with gourmet brigadeiro frosting",price:32,img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80",category:"desserts",
+ingredients:"Carrots, eggs, sugar, vegetable oil, wheat flour, baking powder, brigadeiro (condensed milk, cocoa powder, butter), chocolate sprinkles",
+serving:"150g (1 slice)",calories:360,
+prep:"Thaw at room temperature for 40 min. Microwave: Heat 20–30 sec for a warm, soft texture. Store in fridge once thawed."},
+
+{id:17,name:"Protein Wrap",desc:"Turkey breast, cottage cheese, rocket & quinoa",price:28,img:"https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&q=80",category:"fitness",
+ingredients:"Whole wheat tortilla, turkey breast, cottage cheese, rocket, quinoa, cherry tomatoes, cucumber, flaxseeds, lemon juice, olive oil, salt, pepper",
+serving:"280g (1 wrap)",calories:310,
+prep:"Thaw in fridge for 4–6 hours and enjoy cold. Microwave: Heat 1–2 min if you prefer it warm. Great for a quick lunch or post-workout meal."},
+
+{id:18,name:"BBQ Pulled Beef Ribs",desc:"Slow-cooked with smoky barbecue glaze",price:55,img:"https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80",category:"meats",
+ingredients:"Beef short ribs, BBQ sauce (tomato, brown sugar, smoked paprika, apple cider vinegar, Worcestershire sauce), garlic, onion, coleslaw (cabbage, carrots, mayo), salt, pepper",
+serving:"380g (1 portion)",calories:520,
+prep:"Oven: Preheat to 170°C, cover with foil, heat 20–25 min until tender. Microwave: Heat 5–6 min. Finish under grill 2 min for caramelised edges."},
+
+{id:19,name:"Mushroom Risotto",desc:"Arborio rice, wild mushrooms & truffle oil",price:44,img:"https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&q=80",category:"mains",
+ingredients:"Arborio rice, porcini mushrooms, shiitake, button mushrooms, onion, garlic, white wine, vegetable broth, parmesan, butter, truffle oil, parsley, salt, pepper",
+serving:"360g (1 portion)",calories:440,
+prep:"Microwave: Heat 4–5 min, stir halfway, add a splash of water if needed. Pan: Heat in saucepan with a bit of broth for creamier texture. Drizzle truffle oil before serving."},
+
+{id:20,name:"Crème Caramel",desc:"Classic custard with silky caramel — grandma's recipe",price:25,img:"https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80",category:"desserts",
+ingredients:"Whole milk, eggs, sugar, vanilla bean, caramel (sugar, water, lemon juice)",
+serving:"130g (1 portion)",calories:220,
+prep:"Thaw in fridge for 4–6 hours. Serve cold — flip onto a plate and let the caramel drizzle over. Do not microwave."}
 ];
 
 const categories=[
@@ -536,7 +680,7 @@ g.innerHTML=list.map(p=>{
 const ic=cart.find(i=>i.id===p.id);
 const badge=p.badge==='sale'?'<span class="product-badge badge-sale">SALE</span>':p.badge==='new'?'<span class="product-badge badge-new">NEW</span>':p.badge==='popular'?'<span class="product-badge badge-popular">★ POPULAR</span>':'';
 const btn=ic?`<div class="qty-controls"><button class="qty-btn minus" onclick="event.stopPropagation();changeQty(${p.id},-1)">−</button><span class="qty-num">${ic.qty}</span><button class="qty-btn plus" onclick="event.stopPropagation();changeQty(${p.id},1)">+</button></div>`:`<button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">+</button>`;
-return`<div class="product-card fade-in">${badge}<div class="product-img"><img src="${p.img}" alt="${p.name}" loading="lazy"></div><div class="product-info"><div class="product-cat">${p.category}</div><div class="product-name">${p.name}</div><div class="product-desc">${p.desc}</div><div class="product-bottom"><div class="product-price">AED ${p.price}</div>${btn}</div></div></div>`;
+return`<div class="product-card fade-in" onclick="openModal(${p.id})" style="cursor:pointer">${badge}<div class="product-img"><img src="${p.img}" alt="${p.name}" loading="lazy"></div><div class="product-info"><div class="product-cat">${p.category}</div><div class="product-name">${p.name}</div><div class="product-desc">${p.desc}</div><div class="product-bottom"><div class="product-price">AED ${p.price}</div>${btn}</div></div></div>`;
 }).join('');
 requestAnimationFrame(()=>{document.querySelectorAll('.product-card.fade-in').forEach((el,i)=>{setTimeout(()=>el.classList.add('visible'),i*50)})});
 }
@@ -583,6 +727,48 @@ window.open(`https://wa.me/5111982053854?text=${encodeURIComponent(msg)}`,'_blan
 
 function showToast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
 
+let currentModalProduct=null;
+function openModal(id){
+const p=products.find(x=>x.id===id);
+if(!p)return;
+currentModalProduct=p;
+document.getElementById('modalImg').innerHTML=`<img src="${p.img}" alt="${p.name}">`;
+document.getElementById('modalCat').textContent=p.category;
+document.getElementById('modalTitle').textContent=p.name;
+document.getElementById('modalDesc').textContent=p.desc;
+document.getElementById('modalServing').textContent=p.serving||'—';
+document.getElementById('modalCalories').textContent=p.calories?p.calories+' kcal':'—';
+document.getElementById('modalPrice').textContent='AED '+p.price;
+document.getElementById('modalIngredients').textContent=p.ingredients||'—';
+document.getElementById('modalPrep').textContent=p.prep||'—';
+const ic=cart.find(i=>i.id===p.id);
+const actionsEl=document.querySelector('.modal-actions');
+if(ic){
+actionsEl.innerHTML=`<div class="modal-qty-wrap"><button class="qty-btn minus" onclick="changeQty(${p.id},-1);refreshModalActions(${p.id})">−</button><span class="qty-num">${ic.qty}</span><button class="qty-btn plus" onclick="changeQty(${p.id},1);refreshModalActions(${p.id})">+</button></div><button class="btn btn-primary modal-add-btn" onclick="closeModal()">Continue Shopping</button>`;
+}else{
+actionsEl.innerHTML=`<button class="btn btn-primary modal-add-btn" onclick="addToCart(${p.id});refreshModalActions(${p.id})">Add to Cart — AED ${p.price}</button>`;
+}
+document.getElementById('modalOverlay').classList.add('open');
+document.getElementById('productModal').classList.add('open');
+document.body.style.overflow='hidden';
+}
+function refreshModalActions(id){
+const p=products.find(x=>x.id===id);
+const ic=cart.find(i=>i.id===id);
+const actionsEl=document.querySelector('.modal-actions');
+if(ic){
+actionsEl.innerHTML=`<div class="modal-qty-wrap"><button class="qty-btn minus" onclick="changeQty(${id},-1);refreshModalActions(${id})">−</button><span class="qty-num">${ic.qty}</span><button class="qty-btn plus" onclick="changeQty(${id},1);refreshModalActions(${id})">+</button></div><button class="btn btn-primary modal-add-btn" onclick="closeModal()">Continue Shopping</button>`;
+}else{
+actionsEl.innerHTML=`<button class="btn btn-primary modal-add-btn" onclick="addToCart(${id});refreshModalActions(${id})">Add to Cart — AED ${p.price}</button>`;
+}
+}
+function closeModal(){
+document.getElementById('modalOverlay').classList.remove('open');
+document.getElementById('productModal').classList.remove('open');
+document.body.style.overflow='';
+currentModalProduct=null;
+}
+
 function toggleMobileNav(){
 const n=document.getElementById('mainNav');
 if(n.style.display==='flex'){n.style.display='none';return}
@@ -602,4 +788,12 @@ el.querySelector('.mins').textContent=Math.floor((diff%36e5)/6e4);
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});
 
 renderCategories();renderProducts(products);updateTimers();setInterval(updateTimers,6e4);
-setTimeout(()=>{document.querySelectorAll('.fade-in').forEach(el=>obs.
+setTimeout(()=>{document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el))},100);
+
+window.addEventListener('scroll',()=>{
+document.getElementById('header').style.boxShadow=window.scrollY>50?'0 4px 24px rgba(0,0,0,.5)':'none';
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();if(document.getElementById('cartSidebar').classList.contains('open'))toggleCart()}});
+</script>
+</body>
+</html>
