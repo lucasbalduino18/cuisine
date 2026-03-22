@@ -292,7 +292,7 @@ pointer-events:none}
 </div>
 <div class="hero-divider fade-in"></div>
 <h1 class="hero-tagline fade-in">Gourmet Flavour<br><span>Ready in Minutes</span></h1>
-<p class="hero-sub fade-in">Handcrafted frozen meals made with premium ingredients. From our kitchen to your table — simply heat and enjoy.</p>
+<p class="hero-sub fade-in">Handcrafted frozen meals made with premium ingredients. From our kitchen to your table, simply heat and enjoy.</p>
 <div class="hero-cta fade-in">
 <a href="#menu" class="btn btn-primary">Browse Menu →</a>
 <a href="#promos" class="btn btn-outline">Today's Deals</a>
@@ -399,7 +399,7 @@ pointer-events:none}
 </div>
 <div class="footer-col"><h4>Navigation</h4><a href="#promos">Deals</a><a href="#menu">Menu</a><a href="#about">About Us</a><a href="#contact">Contact</a></div>
 <div class="footer-col"><h4>Information</h4><a href="#">Delivery Policy</a><a href="#">Returns</a><a href="#">FAQ</a><a href="#">Terms</a></div>
-<div class="footer-col"><h4>Contact</h4><a href="#">📍 Abu Dhabi, UAE</a><a href="#">📞 +971 50 000 0000</a><a href="#">✉️ hello@cuisineclozel.com</a></div>
+<div class="footer-col"><h4>Contact</h4><a href="#">📍 Abu Dhabi, UAE</a><a href="#">📞 +971 50 000 0000</a><a href="#">✉️ <span class="__cf_email__" data-cfemail="b6ded3dadad9f6d5c3dfc5dfd8d3d5dad9ccd3da98d5d9db">[email&#160;protected]</span></a></div>
 </div>
 <div class="footer-bottom">
 <span>© 2026 Cuisine Clozel. All rights reserved.</span>
@@ -428,7 +428,7 @@ pointer-events:none}
 <div class="toast" id="toast"></div>
 <a href="https://wa.me/5111982053854" target="_blank" class="wa-float">💬</a>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const products=[
 {id:1,name:"Beef Lasagna",desc:"Fresh pasta, bolognese sauce & creamy béchamel",price:45,img:"https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=600&q=80",category:"pasta",badge:"popular"},
 {id:2,name:"Chicken Stroganoff",desc:"Creamy sauce with rice and crispy potato sticks",price:35,img:"https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=600&q=80",category:"mains",badge:"popular"},
@@ -540,12 +540,4 @@ el.querySelector('.mins').textContent=Math.floor((diff%36e5)/6e4);
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});
 
 renderCategories();renderProducts(products);updateTimers();setInterval(updateTimers,6e4);
-setTimeout(()=>{document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el))},100);
-
-window.addEventListener('scroll',()=>{
-const h=document.getElementById('header');
-h.style.boxShadow=window.scrollY>50?'0 4px 24px rgba(0,0,0,.5)':'none';
-});
-</script>
-</body>
-</html>
+setTimeout(()=>{document.querySelectorAll('.fade-in').forEach(el=>obs.
